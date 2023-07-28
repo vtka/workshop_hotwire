@@ -1,32 +1,34 @@
 <%# locals: (track:, track_counter: nil, track_iteration: nil, deletable: false, enqueueble: false) -%>
-<li class="track">
-  <span class="track--number">
-    <% if track.id == current_track&.id %>
-      <span class="track--number--text track--playing-indicator"></span>
-    <% else %>
-      <%= track_counter + 1 %>
-    <% end %>
-  </span>
-  <% if current_user&.live_station&.live? %>
-    <%= button_to play_live_station_track_path(track), method: :post, form_class: "track--title" do %>
-      <%= track.title %>
-    <% end %>
-  <% else %>
-    <%= link_to track.title, params.to_unsafe_h.merge(track_id: track.id), class: "track--title" %>
-  <% end %>
-  <% if current_user %>
-    <span class="track--actions">
-      <% if enqueueble %>
-        <%= button_to live_station_tracks_path(track_id: track.id), method: :post, class: "track--action" do %>
-          <%= render "icons/plus" %>
-        <% end %>
-      <% end %>
-      <% if deletable %>
-        <%= button_to live_station_track_path(track), method: :delete, class: "track--action" do %>
-          <%= render "icons/trash" %>
-        <% end %>
+<turbo-frame id="track_<%= track.id %>">
+  <li class="track">
+    <span class="track--number">
+      <% if track.id == current_track&.id %>
+        <span class="track--number--text track--playing-indicator"></span>
+      <% else %>
+        <%= track_counter + 1 %>
       <% end %>
     </span>
-  <% end %>
-  <span class="track--duration"><%= seconds_to_duration(track.duration) %></span>
-</li>
+    <% if current_user&.live_station&.live? %>
+      <%= button_to play_live_station_track_path(track), method: :post, form_class: "track--title", data: {"turbo-frame" => "_top"} do %>
+        <%= track.title %>
+      <% end %>
+    <% else %>
+      <%= link_to track.title, params.to_unsafe_h.merge(track_id: track.id), class: "track--title", data: {"turbo-frame" => "_top"} %>
+    <% end %>
+    <% if current_user %>
+      <span class="track--actions">
+        <% if enqueueble %>
+          <%= button_to live_station_tracks_path(track_id: track.id), method: :post, class: "track--action", data: {"turbo-frame" => "_top"} do %>
+            <%= render "icons/plus" %>
+          <% end %>
+        <% end %>
+        <% if deletable %>
+          <%= button_to live_station_track_path(track), method: :delete, class: "track--action", data: {"turbo-frame" => "_top"} do %>
+            <%= render "icons/trash" %>
+          <% end %>
+        <% end %>
+      </span>
+    <% end %>
+    <span class="track--duration"><%= seconds_to_duration(track.duration) %></span>
+  </li>
+</turbo-frame>
