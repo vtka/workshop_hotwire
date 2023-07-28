@@ -5,9 +5,7 @@ Rails.application.routes.draw do
   post "sign_up", to: "registrations#create"
   delete "sign_out", to: "sessions#destroy", as: :sign_out
 
-  resources :artists, only: [:show] do
-    get 'load_more_tracks', on: :member
-  end
+  resources :artists, only: [:show]
   resources :albums, only: [:show] do
     patch :play, on: :member
   end
